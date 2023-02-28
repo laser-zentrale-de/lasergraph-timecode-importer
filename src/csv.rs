@@ -1,11 +1,12 @@
 use std::fs::File;
+use std::error::Error;
 use serde::{Deserialize};
 
 #[derive(Deserialize, Debug)]
 pub struct Entry {
-    number: String,
-    name: String,
-    start: String,
+    pub number: String,
+    pub name: String,
+    pub start: String,
 }
 
 pub fn get_csv_entries(filepath: &str) -> Result<Vec<Entry>, Box<dyn Error>> {
