@@ -1,6 +1,12 @@
 # Lasergraph DSP timecode importer
-Timecode (timestamps) importer for the Laseranimation Lasergraph DSP.
+Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
 
 ## Description
-This tool should be able to import timestamps from a csv-file to the Lasergraph DSP timescript.<br>
-It should also produce the corresponding entries in the Lasergraph DSP film X.
+This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Lasergraph DSP timescript and adds the corresponding entries.<br>
+
+## Why?
+Sometimes it's hard to find the correct timestamp for specific (out of beat) sequences.<br>
+There are thrid party tools like Reaper, where you can set specific markers to the the timeline and export them afterwards to a csv-file.<br>
+For light shows with the MaLighting GrandMa2, it is common practice to use the exported csv and import it to the consol.<br>
+<br>
+I want to adapt this workflow to the Lasergraph DSP.
