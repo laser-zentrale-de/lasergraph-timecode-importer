@@ -8,7 +8,9 @@ fn main() {
     // Define input variabes - later user input via cli
     let target: &str = "192.168.55.100:8210";
     let filepath: &str = "/home/dstrobel/Documents/entries.csv";
+    let entry_offset: i32 = 40;
 
+    // Variables
     let mut entries: Vec<Entry> = Vec::new();
 
     // Get entries from CSV
@@ -20,7 +22,7 @@ fn main() {
     }
 
     // Get entries from CSV
-    match sender::send_entries(target, entries) {
+    match sender::send_entries(target, entries, entry_offset) {
         Ok(()) => println!("Successfully imported entries to DSP {}", target),
         Err(e) => eprintln!("Failed to import entries to DSP {}\nError: {}", target, e),
     }

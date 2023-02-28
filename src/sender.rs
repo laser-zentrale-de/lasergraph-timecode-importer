@@ -23,7 +23,7 @@ fn send_tcp_packet(stream: &mut TcpStream, packet:&str) -> Result<(), Box<dyn Er
     Ok(())
 }
 
-pub fn send_entries(target: &str, entries: Vec<Entry>) -> Result<(), Box<dyn Error>> {
+pub fn send_entries(target: &str, entries: Vec<Entry>, entry_offset: i32) -> Result<(), Box<dyn Error>> {
 
     // Open TCP/IP stream
     let mut stream = TcpStream::connect(target)?;
@@ -32,7 +32,7 @@ pub fn send_entries(target: &str, entries: Vec<Entry>) -> Result<(), Box<dyn Err
     send_tcp_packet(&mut stream, "root")?;
 
     // Loop through entries
-    let mut i: i32 = 0;
+    let mut i: i32 = 0 + entry_offset;
     for entry in entries {
 
         // Convert timestamp
