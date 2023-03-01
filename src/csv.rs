@@ -9,7 +9,7 @@ pub struct Entry {
     pub start: String,
 }
 
-pub fn get_csv_entries(filepath: &str) -> Result<Vec<Entry>, Box<dyn Error>> {
+pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<dyn Error>> {
 
     // Open file
     let file = File::open(filepath)?;

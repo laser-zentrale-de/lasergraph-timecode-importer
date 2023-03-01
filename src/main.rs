@@ -1,16 +1,39 @@
 mod csv;
 mod sender;
 
+use clap::Parser;
 use crate::csv::Entry;
 
+/// Import timecode entries to Lasergraph DSP
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+   /// IP-Address of the Lasergraph DSP
+   #[arg(short, long)]
+   address: String,
+
+   /// TCP/IP port of the lasergraph DSP for remoting
+   #[arg(short, long, default_value_t = 8210)]
+   port: i32,
+
+   /// Path to the CSV-file
+   #[arg(short, long)]
+   csv: std::path::PathBuf,
+
+   /// Start number of the Entries that should be created
+   #[arg(short, long, default_value_t = 0)]
+   start: i32,
+}
+
 fn main() {
+    // Parse arguments from CLI
+    let args = Args::parse();
 
-    // Define input variabes - later user input via cli
-    let target: &str = "192.168.55.100:8210";
-    let filepath: &str = "/home/dstrobel/Documents/entries.csv";
-    let entry_offset: i32 = 40;
+    let target: String = format!("{}:{}", args.address, args.port.to_string());
+    let filepath: std::path::PathBuf = args.csv;
+    let entry_offset: i32 = args.start;
 
-    // Variables
+    // Create entry vector
     let mut entries: Vec<Entry> = Vec::new();
 
     // Get entries from CSV
@@ -18,11 +41,13 @@ fn main() {
         Ok(parsed_entries) => {
             entries = parsed_entries;
         },
-        Err(e) => eprintln!("Failed to parse entries from CSV file {}\nError: {}", filepath, e),
+        Err(e) => {
+            eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
+        },
     }
 
     // Get entries from CSV
-    match sender::send_entries(target, entries, entry_offset) {
+    match sender::send_entries(&target, entries, entry_offset) {
         Ok(()) => println!("Successfully imported entries to DSP {}", target),
         Err(e) => eprintln!("Failed to import entries to DSP {}\nError: {}", target, e),
     }
