@@ -46,7 +46,7 @@ fn main() {
         },
     }
 
-    // Get entries from CSV
+    // Send entries to DSP
     match sender::send_entries(&target, entries, entry_offset) {
         Ok(()) => println!("Successfully imported entries to DSP {}", target),
         Err(e) => eprintln!("Failed to import entries to DSP {}\nError: {}", target, e),
