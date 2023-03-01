@@ -33,8 +33,8 @@ fn main() {
     let filepath: std::path::PathBuf = args.csv;
     let entry_offset: i32 = args.start;
 
-    // Create entry vector
-    let mut entries: Vec<Entry> = Vec::new();
+    // Create Entry result vector
+    let entries: Vec<Entry>;
 
     // Get entries from CSV
     match csv::get_csv_entries(filepath) {
@@ -43,12 +43,16 @@ fn main() {
         },
         Err(e) => {
             eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
+            std::process::exit(1);
         },
     }
 
     // Send entries to DSP
     match sender::send_entries(&target, entries, entry_offset) {
         Ok(()) => println!("Successfully imported entries to DSP {}", target),
-        Err(e) => eprintln!("Failed to import entries to DSP {}\nError: {}", target, e),
+        Err(e) => {
+            eprintln!("Failed to import entries to DSP {}\nError: {}", target, e);
+            std::process::exit(1);
+        }
     }
 }
