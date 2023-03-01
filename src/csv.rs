@@ -1,6 +1,6 @@
-use std::fs::File;
+use serde::Deserialize;
 use std::error::Error;
-use serde::{Deserialize};
+use std::fs::File;
 
 #[derive(Deserialize, Debug)]
 pub struct Entry {
@@ -10,7 +10,6 @@ pub struct Entry {
 }
 
 pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<dyn Error>> {
-
     // Open file
     let file = File::open(filepath)?;
 

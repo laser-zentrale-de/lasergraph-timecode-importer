@@ -1,6 +1,6 @@
-use std::io::prelude::*;
 use std::error::Error;
-use std::net::{TcpStream};
+use std::io::prelude::*;
+use std::net::TcpStream;
 
 use crate::csv::Entry;
 
@@ -10,7 +10,7 @@ fn replace_timestamp_colon_to_comma(input: &str) -> String {
     timestamp
 }
 
-fn send_tcp_packet(stream: &mut TcpStream, packet:&str) -> Result<(), Box<dyn Error>> {
+fn send_tcp_packet(stream: &mut TcpStream, packet: &str) -> Result<(), Box<dyn Error>> {
     // Simulate ENTER with the additional \n
     let command = format!("{}\n", packet);
 
@@ -23,8 +23,11 @@ fn send_tcp_packet(stream: &mut TcpStream, packet:&str) -> Result<(), Box<dyn Er
     Ok(())
 }
 
-pub fn send_entries(target: &str, entries: Vec<Entry>, entry_offset: i32) -> Result<(), Box<dyn Error>> {
-
+pub fn send_entries(
+    target: &str,
+    entries: Vec<Entry>,
+    entry_offset: i32,
+) -> Result<(), Box<dyn Error>> {
     // Open TCP/IP stream
     let mut stream = TcpStream::connect(target)?;
 
@@ -34,11 +37,10 @@ pub fn send_entries(target: &str, entries: Vec<Entry>, entry_offset: i32) -> Res
     // Loop through entries
     let mut i: i32 = 0 + entry_offset;
     for entry in entries {
-
         // Convert timestamp
         let start: String = entry.start;
         let timestamp: String = replace_timestamp_colon_to_comma(&start);
-        let timescript_insert: String = format!("insert {} entry {}",timestamp , i.to_string());
+        let timescript_insert: String = format!("insert {} entry {}", timestamp, i.to_string());
 
         // Convert Count variable
         let entry_insert: String = format!("insert entry {}", i.to_string());

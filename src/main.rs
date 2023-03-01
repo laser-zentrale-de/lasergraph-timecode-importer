@@ -1,28 +1,28 @@
 mod csv;
 mod sender;
 
-use clap::Parser;
 use crate::csv::Entry;
+use clap::Parser;
 
 /// Import timecode entries to Lasergraph DSP
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-   /// IP-Address of the Lasergraph DSP
-   #[arg(short, long)]
-   address: String,
+    /// IP-Address of the Lasergraph DSP
+    #[arg(short, long)]
+    address: String,
 
-   /// TCP/IP port of the lasergraph DSP for remoting
-   #[arg(short, long, default_value_t = 8210)]
-   port: i32,
+    /// TCP/IP port of the lasergraph DSP for remoting
+    #[arg(short, long, default_value_t = 8210)]
+    port: i32,
 
-   /// Path to the CSV-file
-   #[arg(short, long)]
-   csv: std::path::PathBuf,
+    /// Path to the CSV-file
+    #[arg(short, long)]
+    csv: std::path::PathBuf,
 
-   /// Start number of the Entries that should be created
-   #[arg(short, long, default_value_t = 0)]
-   start: i32,
+    /// Start number of the Entries that should be created
+    #[arg(short, long, default_value_t = 0)]
+    start: i32,
 }
 
 fn main() {
@@ -40,11 +40,11 @@ fn main() {
     match csv::get_csv_entries(filepath) {
         Ok(parsed_entries) => {
             entries = parsed_entries;
-        },
+        }
         Err(e) => {
             eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
             std::process::exit(1);
-        },
+        }
     }
 
     // Send entries to DSP
