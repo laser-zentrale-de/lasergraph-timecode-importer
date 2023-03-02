@@ -5,7 +5,7 @@ use std::net::TcpStream;
 use crate::csv::Entry;
 
 fn replace_timestamp_colon_to_comma(input: &str) -> String {
-    let split = input.split(":").collect::<Vec<&str>>();
+    let split = input.split(':').collect::<Vec<&str>>();
     let timestamp: String = format!("{}:{}:{},{}", split[0], split[1], split[2], split[3]);
     timestamp
 }
@@ -35,15 +35,15 @@ pub fn send_entries(
     send_tcp_packet(&mut stream, "root")?;
 
     // Loop through entries
-    let mut i: i32 = 0 + entry_offset;
+    let mut i: i32 = entry_offset;
     for entry in entries {
         // Convert timestamp
         let start: String = entry.start;
         let timestamp: String = replace_timestamp_colon_to_comma(&start);
-        let timescript_insert: String = format!("insert {} entry {}", timestamp, i.to_string());
+        let timescript_insert: String = format!("insert {} entry {}", timestamp, i);
 
         // Convert Count variable
-        let entry_insert: String = format!("insert entry {}", i.to_string());
+        let entry_insert: String = format!("insert entry {}", i);
 
         // Add entry 1 to film 2
         send_tcp_packet(&mut stream, "edit")?;

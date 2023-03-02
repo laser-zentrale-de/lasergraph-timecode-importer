@@ -29,23 +29,20 @@ fn main() {
     // Parse arguments from CLI
     let args = Args::parse();
 
-    let target: String = format!("{}:{}", args.address, args.port.to_string());
+    let target: String = format!("{}:{}", args.address, args.port);
     let filepath: std::path::PathBuf = args.csv;
     let entry_offset: i32 = args.start;
 
-    // Create Entry result vector
-    let entries: Vec<Entry>;
-
     // Get entries from CSV
-    match csv::get_csv_entries(filepath) {
+    let entries: Vec<Entry> = match csv::get_csv_entries(filepath) {
         Ok(parsed_entries) => {
-            entries = parsed_entries;
+            parsed_entries
         }
         Err(e) => {
             eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
             std::process::exit(1);
         }
-    }
+    };
 
     // Send entries to DSP
     match sender::send_entries(&target, entries, entry_offset) {
@@ -54,5 +51,5 @@ fn main() {
             eprintln!("Failed to import entries to DSP {}\nError: {}", target, e);
             std::process::exit(1);
         }
-    }
+    };
 }
