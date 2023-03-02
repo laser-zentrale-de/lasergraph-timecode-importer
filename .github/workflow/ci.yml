@@ -1,11 +1,11 @@
 name: Continuous Integration
 
 on:
-  pull_request:
-    paths:
-      - "**.rs"
-      - "Cargo.toml"
-      - "Cargo.lock"
+  push:
+    # paths:
+    #   - "**.rs"
+    #   - "Cargo.toml"
+    #   - "Cargo.lock"
 
 jobs:
   fmt:
