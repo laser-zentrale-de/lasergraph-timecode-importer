@@ -35,9 +35,7 @@ fn main() {
 
     // Get entries from CSV
     let entries: Vec<Entry> = match csv::get_csv_entries(filepath) {
-        Ok(parsed_entries) => {
-            parsed_entries
-        }
+        Ok(parsed_entries) => parsed_entries,
         Err(e) => {
             eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
             std::process::exit(1);
