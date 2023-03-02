@@ -1,3 +1,4 @@
+[![CI](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/ci.yml/badge.svg)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/ci.yml)
 # Lasergraph DSP timecode importer
 Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
 
