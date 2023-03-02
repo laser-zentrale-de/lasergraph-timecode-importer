@@ -1,4 +1,6 @@
 [![Build](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml/badge.svg)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml)
+[![dependency status](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer/status.svg)](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer)
+[![AGPL-3.0 Licensed](https://img.shields.io/github/license/d-strobel/lasergraph-dsp-timecode-importer)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/blob/main/LICENSE)
 
 # Lasergraph DSP timecode importer
 Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
