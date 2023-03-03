@@ -14,8 +14,10 @@ pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<d
     // Open file
     let file = File::open(filepath)?;
 
+    // Read from file
     let mut rdr = csv::Reader::from_reader(file);
 
+    // Deserialize csv and add to new vector
     let mut entries = Vec::new();
 
     for result in rdr.deserialize() {
