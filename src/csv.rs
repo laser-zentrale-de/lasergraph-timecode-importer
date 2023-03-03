@@ -1,3 +1,4 @@
+use log::debug;
 use serde::Deserialize;
 use std::error::Error;
 use std::fs::File;
@@ -19,7 +20,7 @@ pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<d
 
     for result in rdr.deserialize() {
         let record: Entry = result?;
-        println!("{:?}", record);
+        debug!("Parsed csv: {:?}", record);
         entries.push(record);
     }
 

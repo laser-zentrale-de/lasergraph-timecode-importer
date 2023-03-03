@@ -3,6 +3,7 @@ mod sender;
 
 use crate::csv::Entry;
 use clap::Parser;
+use log::{error, info};
 
 /// Import timecode entries to Lasergraph DSP
 #[derive(Parser, Debug)]
@@ -26,6 +27,11 @@ struct Args {
 }
 
 fn main() {
+    // Initialize the logger
+    env_logger::init();
+
+    info!("lasergraph-dsp-timecode-importer started");
+
     // Parse arguments from CLI
     let args = Args::parse();
 
@@ -37,7 +43,7 @@ fn main() {
     let entries: Vec<Entry> = match csv::get_csv_entries(filepath) {
         Ok(parsed_entries) => parsed_entries,
         Err(e) => {
-            eprintln!("Failed to parse entries from CSV file.\nError: {}", e);
+            error!("Failed to parse entries from CSV file with error: {}", e);
             std::process::exit(1);
         }
     };
@@ -46,7 +52,7 @@ fn main() {
     match sender::send_entries(&target, entries, entry_offset) {
         Ok(()) => println!("Successfully imported entries to DSP {}", target),
         Err(e) => {
-            eprintln!("Failed to import entries to DSP {}\nError: {}", target, e);
+            error!("Failed to send entries to DSP with error: {}", e);
             std::process::exit(1);
         }
     };
