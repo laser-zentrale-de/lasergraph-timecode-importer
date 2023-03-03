@@ -48,9 +48,9 @@ pub fn send_entries(
         // Convert Count variable
         let entry_insert: String = format!("insert entry {}", i);
 
-        // Add entry 1 to film 2
+        // Add entry 1 to film 1
         send_tcp_packet(&mut stream, "edit")?;
-        send_tcp_packet(&mut stream, "film2")?;
+        send_tcp_packet(&mut stream, "film1")?;
         send_tcp_packet(&mut stream, &entry_insert)?;
         send_tcp_packet(&mut stream, "")?;
 
