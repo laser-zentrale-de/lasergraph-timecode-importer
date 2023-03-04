@@ -98,3 +98,46 @@ pub fn send_entries(
 
     Ok(())
 }
+
+// Unit testing
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_good_replace_timestamp_colon_to_comma() {
+        assert_eq!(
+            replace_timestamp_colon_to_comma("00:00:00:00"),
+            "00:00:00,00"
+        );
+        assert_eq!(
+            replace_timestamp_colon_to_comma("05:14:46:24"),
+            "05:14:46,24"
+        );
+        assert_eq!(replace_timestamp_colon_to_comma("1:35:22:05"), "1:35:22,05");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_replace_timestamp_colon_to_comma_01() {
+        assert_eq!(
+            replace_timestamp_colon_to_comma("00.00:00:00"),
+            "00:00:00,00"
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_replace_timestamp_colon_to_comma_02() {
+        assert_eq!(
+            replace_timestamp_colon_to_comma("05;14:46:24"),
+            "05:14:46,24"
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_replace_timestamp_colon_to_comma_03() {
+        assert_eq!(replace_timestamp_colon_to_comma("1:35:22-05"), "1:35:22,05");
+    }
+}
