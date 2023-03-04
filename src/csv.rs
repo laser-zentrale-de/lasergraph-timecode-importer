@@ -5,8 +5,11 @@ use std::fs::File;
 
 #[derive(Deserialize, Debug)]
 pub struct Entry {
+    #[serde(rename = "#")]
     pub number: String,
+    #[serde(rename = "Name")]
     pub name: String,
+    #[serde(rename = "Start")]
     pub start: String,
 }
 
