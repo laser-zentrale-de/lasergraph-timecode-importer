@@ -8,7 +8,7 @@ Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
 ## Description
 This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Lasergraph DSP timescript and adds the corresponding entries.<br>
 
-⚠️**IMPORTANT**: This project is not related to LaserAnimation Sollinger GmbH. When using this command line tool, please report any bugs or suggestions directly via Github Issues.
+⚠️ **IMPORTANT**: This project is not related to LaserAnimation Sollinger GmbH. When using this command line tool, please report any bugs or suggestions directly via Github Issues.
 
 ## Features
 - Import timestamps to timescript
