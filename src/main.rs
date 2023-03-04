@@ -1,4 +1,5 @@
 mod csv;
+mod error;
 mod sender;
 
 use crate::csv::Entry;
@@ -50,7 +51,7 @@ fn main() {
 
     // Send entries to DSP
     match sender::send_entries(&target, entries, entry_offset) {
-        Ok(()) => println!("Successfully imported entries to DSP {}", target),
+        Ok(()) => println!("Successfully sent entries to DSP {}", target),
         Err(e) => {
             error!("Failed to send entries to DSP with error: {}", e);
             std::process::exit(1);

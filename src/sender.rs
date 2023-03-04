@@ -1,9 +1,10 @@
+use crate::csv::Entry;
+use crate::error;
+use log::{debug, info, trace};
+use regex::Regex;
 use std::error::Error;
 use std::io::prelude::*;
 use std::net::TcpStream;
-
-use crate::csv::Entry;
-use log::{debug, trace};
 
 fn replace_timestamp_colon_to_comma(input: &str) -> String {
     let split = input.split(':').collect::<Vec<&str>>();
@@ -11,6 +12,31 @@ fn replace_timestamp_colon_to_comma(input: &str) -> String {
     trace!("Timestamp conversion -> Old: {} New: {}", input, timestamp);
 
     timestamp
+}
+
+fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
+    let timestamp: String;
+
+    // Timestamp schema for Lasergraph DSP
+    let regex_timestamp = Regex::new(r"^\d{2}:\d{2}:\d{2},\d{2}$")?;
+
+    // Timestamp from Reaper
+    let regex_reaper = Regex::new(r"^\d{2}:\d{2}:\d{2}:\d{2}$")?;
+
+    if regex_timestamp.is_match(input) {
+        trace!("Timestamp format correct (00:00:00,00)");
+        timestamp = input.to_string();
+    } else if regex_reaper.is_match(input) {
+        trace!("Timestamp is in wrong format (00:00:00:00)");
+        timestamp = replace_timestamp_colon_to_comma(input);
+    } else {
+        error!("Timestamp does not match any known format");
+        return Err(Box::new(error::CustomError {
+            message: "Something went wrong".to_string(),
+        }));
+    }
+
+    Ok(timestamp)
 }
 
 fn send_tcp_packet(stream: &mut TcpStream, packet: &str) -> Result<(), Box<dyn Error>> {
@@ -21,7 +47,7 @@ fn send_tcp_packet(stream: &mut TcpStream, packet: &str) -> Result<(), Box<dyn E
     stream.write_all(command.as_bytes())?;
 
     // Output the packet without \n
-    debug!("Sent packet: {}", packet);
+    debug!("Sent packet to DSP: {}", packet);
 
     Ok(())
 }
@@ -33,6 +59,7 @@ pub fn send_entries(
 ) -> Result<(), Box<dyn Error>> {
     // Open TCP/IP stream
     let mut stream = TcpStream::connect(target)?;
+    info!("TCP stream opened to address: {}", target);
 
     // swtich to DSP main window
     send_tcp_packet(&mut stream, "root")?;
@@ -41,8 +68,7 @@ pub fn send_entries(
     let mut i: i32 = entry_offset;
     for entry in entries {
         // Convert timestamp
-        let start: String = entry.start;
-        let timestamp: String = replace_timestamp_colon_to_comma(&start);
+        let timestamp: String = get_correct_timestamp(&entry.start)?;
         let timescript_insert: String = format!("insert {} entry {}", timestamp, i);
 
         // Convert Count variable
@@ -67,6 +93,7 @@ pub fn send_entries(
 
     // Exit TCP/IP stream
     drop(stream);
+    info!("TCP stream closed to address: {}", target);
 
     Ok(())
 }
