@@ -1,5 +1,5 @@
 use crate::csv::Entry;
-use crate::error;
+use crate::error::InputError;
 use log::{debug, info, trace};
 use regex::Regex;
 use std::error::Error;
@@ -18,10 +18,10 @@ fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
     let timestamp: String;
 
     // Timestamp schema for Lasergraph DSP
-    let regex_timestamp = Regex::new(r"^\d{2}:\d{2}:\d{2},\d{2}$")?;
+    let regex_timestamp = Regex::new(r"^\d{1,2}:\d{2}:\d{2},\d{2}$")?;
 
     // Timestamp from Reaper
-    let regex_reaper = Regex::new(r"^\d{2}:\d{2}:\d{2}:\d{2}$")?;
+    let regex_reaper = Regex::new(r"^\d{1,2}:\d{2}:\d{2}:\d{2}$")?;
 
     if regex_timestamp.is_match(input) {
         trace!("Timestamp format correct (00:00:00,00)");
@@ -30,10 +30,11 @@ fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
         trace!("Timestamp is in wrong format (00:00:00:00)");
         timestamp = replace_timestamp_colon_to_comma(input);
     } else {
-        error!("Timestamp does not match any known format");
-        return Err(Box::new(error::CustomError {
-            message: "Something went wrong".to_string(),
-        }));
+        debug!("Timestamp {} does not match any known format", input);
+
+        return Err(Box::new(InputError::ParseError(
+            "Time stamp does not match any known schema".to_string(),
+        )));
     }
 
     Ok(timestamp)
