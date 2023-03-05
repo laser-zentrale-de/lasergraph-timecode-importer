@@ -1,12 +1,12 @@
+mod cli;
 mod csv;
 mod error;
 mod sender;
-mod cli;
 
 use crate::csv::Entry;
 use clap::Parser;
 use log::{error, info};
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 fn main() {
     // Initialize the logger
