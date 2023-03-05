@@ -1,31 +1,12 @@
 mod csv;
 mod error;
 mod sender;
+mod cli;
 
 use crate::csv::Entry;
 use clap::Parser;
 use log::{error, info};
-
-/// Import timecode entries to Lasergraph DSP
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-struct Args {
-    /// IP-Address of the Lasergraph DSP
-    #[arg(short, long)]
-    address: String,
-
-    /// TCP/IP port of the lasergraph DSP for remoting
-    #[arg(short, long, default_value_t = 8210)]
-    port: i32,
-
-    /// Path to the CSV-file
-    #[arg(short, long)]
-    csv: std::path::PathBuf,
-
-    /// Start number of the Entries that should be created
-    #[arg(short, long, default_value_t = 0)]
-    start: i32,
-}
+use std::path::{PathBuf};
 
 fn main() {
     // Initialize the logger
@@ -34,10 +15,10 @@ fn main() {
     info!("lasergraph-dsp-timecode-importer started");
 
     // Parse arguments from CLI
-    let args = Args::parse();
+    let args = cli::Args::parse();
 
     let target: String = format!("{}:{}", args.address, args.port);
-    let filepath: std::path::PathBuf = args.csv;
+    let filepath: PathBuf = args.csv;
     let entry_offset: i32 = args.start;
 
     // Get entries from CSV
