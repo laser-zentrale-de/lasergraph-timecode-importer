@@ -6,12 +6,17 @@ use std::error::Error;
 use std::io::prelude::*;
 use std::net::TcpStream;
 
-fn replace_timestamp_colon_to_comma(input: &str) -> String {
+fn replace_timestamp_last_colon_to_comma(input: &str) -> Result<String, Box<dyn Error>> {
     let split = input.split(':').collect::<Vec<&str>>();
+
+    if split.len() != 4 {
+        return Err("Invalid input".into());
+    }
+
     let timestamp: String = format!("{}:{}:{},{}", split[0], split[1], split[2], split[3]);
     trace!("Timestamp conversion -> Old: {} New: {}", input, timestamp);
 
-    timestamp
+    Ok(timestamp)
 }
 
 fn format_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
@@ -23,12 +28,13 @@ fn format_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
     // Timestamp from Reaper
     let regex_reaper = Regex::new(r"^\d{1,2}:\d{2}:\d{2}:\d{2}$")?;
 
+    // Match for known timestamp formats
     if regex_timestamp.is_match(input) {
         trace!("Timestamp format correct (00:00:00,00)");
         timestamp = input.to_string();
     } else if regex_reaper.is_match(input) {
         trace!("Timestamp is in wrong format (00:00:00:00)");
-        timestamp = replace_timestamp_colon_to_comma(input);
+        timestamp = replace_timestamp_last_colon_to_comma(input)?;
     } else {
         debug!("Timestamp {} does not match any known format", input);
 
@@ -105,49 +111,46 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_good_replace_timestamp_colon_to_comma() {
+    fn test_replace_timestamp_last_colon_to_comma() {
+        // Should be Ok()
         assert_eq!(
-            replace_timestamp_colon_to_comma("00:00:00:00"),
-            "00:00:00,00"
+            replace_timestamp_last_colon_to_comma("00:00:00:00").unwrap(),
+            "00:00:00,00".to_string()
         );
         assert_eq!(
-            replace_timestamp_colon_to_comma("05:14:46:24"),
-            "05:14:46,24"
+            replace_timestamp_last_colon_to_comma("05:14:46:24").unwrap(),
+            "05:14:46,24".to_string()
         );
-        assert_eq!(replace_timestamp_colon_to_comma("1:35:22:05"), "1:35:22,05");
+        assert_eq!(
+            replace_timestamp_last_colon_to_comma("1:35:22:05").unwrap(),
+            "1:35:22,05".to_string()
+        );
+
+        // Should be Err()
+        assert!(replace_timestamp_last_colon_to_comma("1;35:22:05").is_err());
+        assert!(replace_timestamp_last_colon_to_comma("1:35:22;05").is_err());
+        assert!(replace_timestamp_last_colon_to_comma("1:35:22-05").is_err());
     }
 
     #[test]
-    #[should_panic]
-    fn test_panic_replace_timestamp_colon_to_comma_01() {
+    fn test_format_timestamp() {
+        // Should be Ok()
         assert_eq!(
-            replace_timestamp_colon_to_comma("00.00:00:00"),
-            "00:00:00,00"
+            format_timestamp("00:00:00:00").unwrap(),
+            "00:00:00,00".to_string()
         );
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_panic_replace_timestamp_colon_to_comma_02() {
         assert_eq!(
-            replace_timestamp_colon_to_comma("05;14:46:24"),
-            "05:14:46,24"
+            format_timestamp("05:14:46:24").unwrap(),
+            "05:14:46,24".to_string()
         );
-    }
+        assert_eq!(
+            format_timestamp("1:35:22:05").unwrap(),
+            "1:35:22,05".to_string()
+        );
 
-    #[test]
-    #[should_panic]
-    fn test_panic_replace_timestamp_colon_to_comma_03() {
-        assert_eq!(replace_timestamp_colon_to_comma("1:35:22-05"), "1:35:22,05");
-    }
-
-    #[test]
-    fn test_good_format_timestamp() {
-        // let expected_output: String = "00:00:00,00".to_string();
-
-        assert!(matches!(format_timestamp("00:00:00:00"), Ok(_)));
-        assert!(matches!(format_timestamp("00:00:00,00"), Ok(_)));
-        assert!(matches!(format_timestamp("00.00:00,00"), Err(_)));
-        assert!(matches!(format_timestamp("00:00:00;00"), Err(_)));
+        // Should be Err()
+        assert!(format_timestamp("1;35:22:05").is_err());
+        assert!(format_timestamp("1:35:22;05").is_err());
+        assert!(format_timestamp("1:35:22-05").is_err());
     }
 }
