@@ -109,6 +109,7 @@ pub fn send_entries(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::net::TcpListener;
 
     #[test]
     fn test_replace_timestamp_last_colon_to_comma() {
@@ -152,5 +153,29 @@ mod tests {
         assert!(format_timestamp("1;35:22:05").is_err());
         assert!(format_timestamp("1:35:22;05").is_err());
         assert!(format_timestamp("1:35:22-05").is_err());
+    }
+
+    #[test]
+    fn test_send_entries() -> Result<(), Box<dyn Error>> {
+        // Set up a mock server
+        let listener = TcpListener::bind("127.0.0.1:8210")?;
+        let server_addr = listener.local_addr()?;
+        let mut stream = TcpStream::connect(server_addr)?;
+        let (mut incoming, _) = listener.accept()?;
+        let expected_packet = "test packet\n";
+
+        // Send the test packet
+        send_tcp_packet(&mut stream, "test packet")?;
+
+        // Read the received packet
+        let mut buf = [0; 1024];
+        let n = incoming.read(&mut buf)?;
+
+        // Convert bytes to string
+        let received_packet = String::from_utf8_lossy(&buf[..n]);
+
+        assert_eq!(expected_packet, received_packet);
+
+        Ok(())
     }
 }
