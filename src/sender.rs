@@ -14,7 +14,7 @@ fn replace_timestamp_colon_to_comma(input: &str) -> String {
     timestamp
 }
 
-fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
+fn format_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
     let timestamp: String;
 
     // Timestamp schema for Lasergraph DSP
@@ -69,7 +69,7 @@ pub fn send_entries(
     let mut i: i32 = entry_offset;
     for entry in entries {
         // Convert timestamp
-        let timestamp: String = get_correct_timestamp(&entry.start)?;
+        let timestamp: String = format_timestamp(&entry.start)?;
         let timescript_insert: String = format!("insert {} entry {}", timestamp, i);
 
         // Convert Count variable
@@ -139,5 +139,15 @@ mod tests {
     #[should_panic]
     fn test_panic_replace_timestamp_colon_to_comma_03() {
         assert_eq!(replace_timestamp_colon_to_comma("1:35:22-05"), "1:35:22,05");
+    }
+
+    #[test]
+    fn test_good_format_timestamp() {
+        // let expected_output: String = "00:00:00,00".to_string();
+
+        assert!(matches!(format_timestamp("00:00:00:00"), Ok(_)));
+        assert!(matches!(format_timestamp("00:00:00,00"), Ok(_)));
+        assert!(matches!(format_timestamp("00.00:00,00"), Err(_)));
+        assert!(matches!(format_timestamp("00:00:00;00"), Err(_)));
     }
 }
