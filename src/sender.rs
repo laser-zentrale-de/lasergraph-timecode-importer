@@ -6,15 +6,20 @@ use std::error::Error;
 use std::io::prelude::*;
 use std::net::TcpStream;
 
-fn replace_timestamp_colon_to_comma(input: &str) -> String {
+fn replace_timestamp_last_colon_to_comma(input: &str) -> Result<String, Box<dyn Error>> {
     let split = input.split(':').collect::<Vec<&str>>();
+
+    if split.len() != 4 {
+        return Err("Invalid input".into());
+    }
+
     let timestamp: String = format!("{}:{}:{},{}", split[0], split[1], split[2], split[3]);
     trace!("Timestamp conversion -> Old: {} New: {}", input, timestamp);
 
-    timestamp
+    Ok(timestamp)
 }
 
-fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
+fn format_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
     let timestamp: String;
 
     // Timestamp schema for Lasergraph DSP
@@ -23,12 +28,13 @@ fn get_correct_timestamp(input: &str) -> Result<String, Box<dyn Error>> {
     // Timestamp from Reaper
     let regex_reaper = Regex::new(r"^\d{1,2}:\d{2}:\d{2}:\d{2}$")?;
 
+    // Match for known timestamp formats
     if regex_timestamp.is_match(input) {
         trace!("Timestamp format correct (00:00:00,00)");
         timestamp = input.to_string();
     } else if regex_reaper.is_match(input) {
         trace!("Timestamp is in wrong format (00:00:00:00)");
-        timestamp = replace_timestamp_colon_to_comma(input);
+        timestamp = replace_timestamp_last_colon_to_comma(input)?;
     } else {
         debug!("Timestamp {} does not match any known format", input);
 
@@ -69,7 +75,7 @@ pub fn send_entries(
     let mut i: i32 = entry_offset;
     for entry in entries {
         // Convert timestamp
-        let timestamp: String = get_correct_timestamp(&entry.start)?;
+        let timestamp: String = format_timestamp(&entry.start)?;
         let timescript_insert: String = format!("insert {} entry {}", timestamp, i);
 
         // Convert Count variable
@@ -97,4 +103,79 @@ pub fn send_entries(
     info!("TCP stream closed to address: {}", target);
 
     Ok(())
+}
+
+// Unit testing
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::net::TcpListener;
+
+    #[test]
+    fn test_replace_timestamp_last_colon_to_comma() {
+        // Should be Ok()
+        assert_eq!(
+            replace_timestamp_last_colon_to_comma("00:00:00:00").unwrap(),
+            "00:00:00,00".to_string()
+        );
+        assert_eq!(
+            replace_timestamp_last_colon_to_comma("05:14:46:24").unwrap(),
+            "05:14:46,24".to_string()
+        );
+        assert_eq!(
+            replace_timestamp_last_colon_to_comma("1:35:22:05").unwrap(),
+            "1:35:22,05".to_string()
+        );
+
+        // Should be Err()
+        assert!(replace_timestamp_last_colon_to_comma("1;35:22:05").is_err());
+        assert!(replace_timestamp_last_colon_to_comma("1:35:22;05").is_err());
+        assert!(replace_timestamp_last_colon_to_comma("1:35:22-05").is_err());
+    }
+
+    #[test]
+    fn test_format_timestamp() {
+        // Should be Ok()
+        assert_eq!(
+            format_timestamp("00:00:00:00").unwrap(),
+            "00:00:00,00".to_string()
+        );
+        assert_eq!(
+            format_timestamp("05:14:46:24").unwrap(),
+            "05:14:46,24".to_string()
+        );
+        assert_eq!(
+            format_timestamp("1:35:22:05").unwrap(),
+            "1:35:22,05".to_string()
+        );
+
+        // Should be Err()
+        assert!(format_timestamp("1;35:22:05").is_err());
+        assert!(format_timestamp("1:35:22;05").is_err());
+        assert!(format_timestamp("1:35:22-05").is_err());
+    }
+
+    #[test]
+    fn test_send_entries() -> Result<(), Box<dyn Error>> {
+        // Set up a mock server
+        let listener = TcpListener::bind("127.0.0.1:8210")?;
+        let server_addr = listener.local_addr()?;
+        let mut stream = TcpStream::connect(server_addr)?;
+        let (mut incoming, _) = listener.accept()?;
+        let expected_packet = "test packet\n";
+
+        // Send the test packet
+        send_tcp_packet(&mut stream, "test packet")?;
+
+        // Read the received packet
+        let mut buf = [0; 1024];
+        let n = incoming.read(&mut buf)?;
+
+        // Convert bytes to string
+        let received_packet = String::from_utf8_lossy(&buf[..n]);
+
+        assert_eq!(expected_packet, received_packet);
+
+        Ok(())
+    }
 }

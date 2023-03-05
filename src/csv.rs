@@ -31,3 +31,40 @@ pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<d
 
     Ok(entries)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile;
+
+    #[test]
+    fn test_get_csv_entries() {
+        // Create a temporary file for testing
+        let file_content = "\
+            #,Name,Start\n\
+            M1,Vocals,00:00:01:23\n\
+            M2,First Drop,1:03:55:02\n\
+            M3,Second Drop,10:43:20:01\n\
+        ";
+        let tmp_dir = tempfile::tempdir().unwrap();
+        let file_path = tmp_dir.path().join("test.csv");
+        std::fs::write(&file_path, file_content).unwrap();
+
+        // Call the function under test
+        let result = get_csv_entries(file_path);
+
+        // Check the result
+        assert!(result.is_ok());
+        let entries = result.unwrap();
+        assert_eq!(entries.len(), 3);
+        assert_eq!(entries[0].number, "M1");
+        assert_eq!(entries[0].name, "Vocals");
+        assert_eq!(entries[0].start, "00:00:01:23");
+        assert_eq!(entries[1].number, "M2");
+        assert_eq!(entries[1].name, "First Drop");
+        assert_eq!(entries[1].start, "1:03:55:02");
+        assert_eq!(entries[2].number, "M3");
+        assert_eq!(entries[2].name, "Second Drop");
+        assert_eq!(entries[2].start, "10:43:20:01");
+    }
+}
