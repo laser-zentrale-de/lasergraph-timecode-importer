@@ -19,7 +19,7 @@ fn main() {
 
     let target: String = format!("{}:{}", args.address, args.port);
     let filepath: PathBuf = args.csv;
-    let entry_offset: i32 = args.start;
+    let entry_offset: i32 = args.start_entry;
 
     // Get entries from CSV
     let entries: Vec<Entry> = match csv::get_csv_entries(filepath) {
@@ -31,7 +31,7 @@ fn main() {
     };
 
     // Send entries to DSP
-    match sender::send_entries(&target, entries, entry_offset) {
+    match sender::send(&target, entries, args.create_entry, entry_offset) {
         Ok(()) => println!("Successfully sent entries to DSP {}", target),
         Err(e) => {
             error!("Failed to send entries to DSP with error: {}", e);

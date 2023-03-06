@@ -1,4 +1,4 @@
-[![Build](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml/badge.svg)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml)
+[![build](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml/badge.svg)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/actions/workflows/build.yml)
 [![dependency status](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer/status.svg)](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer)
 [![AGPL-3.0 Licensed](https://img.shields.io/github/license/d-strobel/lasergraph-dsp-timecode-importer)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/blob/main/LICENSE)
 
@@ -12,8 +12,8 @@ This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Las
 
 ## Features
 - Import timestamps to timescript
-- Import entrys to film
-- Set start number for first entry
+- Import entrys to film (optional)
+- Set start number for first entry (optional)
 - Import from CSV file
 
 ## Usage
