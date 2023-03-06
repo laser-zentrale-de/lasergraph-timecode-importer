@@ -4,7 +4,7 @@ use std::path::PathBuf;
 /// Import timecode timestamps and entries to Lasergraph DSP
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
-    pub struct Args {
+pub struct Args {
     /// IP-Address of the Lasergraph DSP
     #[arg(short, long, value_name = "IP-ADDRESS")]
     pub address: String,
