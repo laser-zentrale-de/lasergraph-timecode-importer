@@ -12,8 +12,8 @@ This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Las
 
 ## Features
 - Import timestamps to timescript
-- Import entrys to film
-- Set start number for first entry
+- Import entrys to film (optional)
+- Set start number for first entry (optional)
 - Import from CSV file
 
 ## Usage
