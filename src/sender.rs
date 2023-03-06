@@ -320,4 +320,49 @@ mod tests {
 
         Ok(())
     }
+
+    #[test]
+    fn test_send_timescript_and_entries_with_offset() -> Result<(), Box<dyn Error>> {
+        // Set up a mock server
+        let listener = TcpListener::bind("127.0.0.1:8204")?;
+        let server_addr = listener.local_addr()?;
+        let mut stream = TcpStream::connect(server_addr)?;
+        let (mut incoming, _) = listener.accept()?;
+
+        // Define some test entries
+        let entries = vec![
+            Entry {
+                number: "M1".to_string(),
+                name: "Vocals".to_string(),
+                start: "1:10:10:04".to_string(),
+            },
+            Entry {
+                number: "M1".to_string(),
+                name: "Drop".to_string(),
+                start: "1:10:10:20".to_string(),
+            },
+        ];
+        let entry_offset = 55;
+
+        // Define the expected timescript
+        let expected_timescript_1: &str =
+            "root\nedit\nfilm1\ninsert entry 55\n\nscript1\ninsert 1:10:10,04 entry 55\n\n";
+        let expected_timescript_2: &str =
+            "edit\nfilm1\ninsert entry 56\n\nscript1\ninsert 1:10:10,20 entry 56\n\nroot\n";
+        let expected_timescript = expected_timescript_1.to_owned() + expected_timescript_2;
+
+        // Send the timescript
+        send_timescript_and_entries(entries, entry_offset, &mut stream)?;
+
+        // Read the received timescript
+        let mut buf = [0; 1024];
+        let n = incoming.read(&mut buf)?;
+
+        // Convert bytes to string
+        let received_timescript = String::from_utf8_lossy(&buf[..n]);
+
+        assert_eq!(expected_timescript, received_timescript);
+
+        Ok(())
+    }
 }
