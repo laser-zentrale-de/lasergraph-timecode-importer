@@ -19,7 +19,7 @@ fn main() {
 
     let target: String = format!("{}:{}", args.address, args.port);
     let filepath: PathBuf = args.csv;
-    let entry_offset: i32 = args.start;
+    let entry_offset: i32 = args.start_entry;
 
     // Get entries from CSV
     let entries: Vec<Entry> = match csv::get_csv_entries(filepath) {
