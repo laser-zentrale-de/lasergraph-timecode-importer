@@ -44,6 +44,7 @@ mod tests {
         assert_eq!(args.address, "127.0.0.1");
         assert_eq!(args.csv.to_str(), Some("/path/to/file.csv"));
         assert_eq!(args.port, 8210);
+        assert_eq!(args.create_entry, false);
         assert_eq!(args.start_entry, 0);
 
         // Test with port
@@ -60,6 +61,7 @@ mod tests {
         assert_eq!(args.address, "127.0.0.1");
         assert_eq!(args.csv.to_str(), Some("/path/to/file.csv"));
         assert_eq!(args.port, 8000);
+        assert_eq!(args.create_entry, false);
         assert_eq!(args.start_entry, 0);
 
         // Test with start_entry
@@ -76,6 +78,7 @@ mod tests {
         assert_eq!(args.address, "127.0.0.1");
         assert_eq!(args.csv.to_str(), Some("/path/to/file.csv"));
         assert_eq!(args.port, 8210);
+        assert_eq!(args.create_entry, false);
         assert_eq!(args.start_entry, 50);
 
         // Test with create_entry
@@ -92,5 +95,6 @@ mod tests {
         assert_eq!(args.csv.to_str(), Some("/path/to/file.csv"));
         assert_eq!(args.port, 8210);
         assert_eq!(args.create_entry, true);
+        assert_eq!(args.start_entry, 0);
     }
 }
