@@ -6,7 +6,7 @@
 Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
 
 ## Description
-This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Lasergraph DSP timescript and adds the corresponding entries.<br>
+This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Lasergraph DSP timescript and optionally adds the corresponding entries.<br>
 
 ⚠️ **IMPORTANT**: This project is not related to LaserAnimation Sollinger GmbH. When using this command line tool, please report any bugs or suggestions directly via Github Issues.
 
@@ -17,21 +17,17 @@ This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Las
 - Import from CSV file
 
 ## Usage
-#### CLI (Linux)
-```bash
-# Download binary from github
-chmod +x ./lasergraph-dsp-timecode-importer
-./lasergraph-dsp-timecode-importer --address <IP address of your dsp> --csv <path to the csv file>
 ```
-#### CLI (MacOS)
-```bash
-# Download binary from github
-# Coming soon
-```
-#### CLI (Windows)
-```bash
-# Download binary from github
-# Coming soon
+Usage: lasergraph-dsp-timecode-importer [OPTIONS] --address <IP-ADDRESS> --csv <FILE>
+
+Options:
+  -a, --address <IP-ADDRESS>  IP-Address of the Lasergraph DSP
+  -p, --port <PORT>           TCP/IP port of the lasergraph DSP for remoting [default: 8210]
+  -c, --csv <FILE>            Path to the CSV-file
+  -e, --create-entry          Defines if entries should be created
+  -s, --start-entry <ENTRY>   Defines the number of the first Entry [default: 0]
+  -h, --help                  Print help
+  -V, --version               Print version
 ```
 
 ## Why?
