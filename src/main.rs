@@ -31,7 +31,7 @@ fn main() {
     };
 
     // Send entries to DSP
-    match sender::send_entries(&target, entries, entry_offset) {
+    match sender::send(&target, entries, args.create_entry, entry_offset) {
         Ok(()) => println!("Successfully sent entries to DSP {}", target),
         Err(e) => {
             error!("Failed to send entries to DSP with error: {}", e);

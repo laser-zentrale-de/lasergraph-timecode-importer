@@ -59,17 +59,13 @@ fn send_tcp_packet(stream: &mut TcpStream, packet: &str) -> Result<(), Box<dyn E
     Ok(())
 }
 
-pub fn send_entries(
-    target: &str,
+fn send_timescript_and_entries(
     entries: Vec<Entry>,
     entry_offset: i32,
+    stream: &mut TcpStream,
 ) -> Result<(), Box<dyn Error>> {
-    // Open TCP/IP stream
-    let mut stream = TcpStream::connect(target)?;
-    info!("TCP stream opened to address: {}", target);
-
     // swtich to DSP main window
-    send_tcp_packet(&mut stream, "root")?;
+    send_tcp_packet(stream, "root")?;
 
     // Loop through entries
     let mut i: i32 = entry_offset;
@@ -82,21 +78,59 @@ pub fn send_entries(
         let entry_insert: String = format!("insert entry {}", i);
 
         // Add entry 1 to film 1
-        send_tcp_packet(&mut stream, "edit")?;
-        send_tcp_packet(&mut stream, "film1")?;
-        send_tcp_packet(&mut stream, &entry_insert)?;
-        send_tcp_packet(&mut stream, "")?;
+        send_tcp_packet(stream, "edit")?;
+        send_tcp_packet(stream, "film1")?;
+        send_tcp_packet(stream, &entry_insert)?;
+        send_tcp_packet(stream, "")?;
 
         // Add entry 1 to timescript
-        send_tcp_packet(&mut stream, "script1")?;
-        send_tcp_packet(&mut stream, &timescript_insert)?;
-        send_tcp_packet(&mut stream, "")?;
+        send_tcp_packet(stream, "script1")?;
+        send_tcp_packet(stream, &timescript_insert)?;
+        send_tcp_packet(stream, "")?;
 
         i += 1;
     }
 
     // Exit
-    send_tcp_packet(&mut stream, "root")?;
+    send_tcp_packet(stream, "root")?;
+
+    Ok(())
+}
+
+fn send_timescript(entries: Vec<Entry>, stream: &mut TcpStream) -> Result<(), Box<dyn Error>> {
+    // swtich to DSP main window
+    send_tcp_packet(stream, "root")?;
+
+    // Loop through entries
+    for entry in entries {
+        // Convert timestamp
+        let timestamp: String = format_timestamp(&entry.start)?;
+        let timescript_insert: String = format!("insert {}", timestamp);
+
+        // Add timestamp to timescript
+        send_tcp_packet(stream, "script1")?;
+        send_tcp_packet(stream, &timescript_insert)?;
+        send_tcp_packet(stream, "")?;
+    }
+
+    Ok(())
+}
+
+pub fn send(
+    target: &str,
+    entries: Vec<Entry>,
+    create_entries: bool,
+    entry_offset: i32,
+) -> Result<(), Box<dyn Error>> {
+    // Open TCP/IP stream
+    let mut stream = TcpStream::connect(target)?;
+    info!("TCP stream opened to address: {}", target);
+
+    if create_entries {
+        send_timescript_and_entries(entries, entry_offset, &mut stream)?
+    } else {
+        send_timescript(entries, &mut stream)?
+    }
 
     // Exit TCP/IP stream
     drop(stream);
