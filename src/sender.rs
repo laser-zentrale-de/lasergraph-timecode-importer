@@ -64,7 +64,7 @@ fn send_timescript_and_entries(
     entry_offset: i32,
     stream: &mut TcpStream,
 ) -> Result<(), Box<dyn Error>> {
-    // swtich to DSP main window
+    // Swtich to DSP main window
     send_tcp_packet(stream, "root")?;
 
     // Loop through entries
@@ -91,14 +91,14 @@ fn send_timescript_and_entries(
         i += 1;
     }
 
-    // Exit
+    // Swtich to DSP main window
     send_tcp_packet(stream, "root")?;
 
     Ok(())
 }
 
 fn send_timescript(entries: Vec<Entry>, stream: &mut TcpStream) -> Result<(), Box<dyn Error>> {
-    // swtich to DSP main window
+    // Swtich to DSP main window
     send_tcp_packet(stream, "root")?;
 
     // Loop through entries
@@ -112,6 +112,9 @@ fn send_timescript(entries: Vec<Entry>, stream: &mut TcpStream) -> Result<(), Bo
         send_tcp_packet(stream, &timescript_insert)?;
         send_tcp_packet(stream, "")?;
     }
+
+    // Swtich to DSP main window
+    send_tcp_packet(stream, "root")?;
 
     Ok(())
 }
@@ -212,7 +215,7 @@ mod tests {
     #[test]
     fn test_send_entries() -> Result<(), Box<dyn Error>> {
         // Set up a mock server
-        let listener = TcpListener::bind("127.0.0.1:8210")?;
+        let listener = TcpListener::bind("127.0.0.1:8201")?;
         let server_addr = listener.local_addr()?;
         let mut stream = TcpStream::connect(server_addr)?;
         let (mut incoming, _) = listener.accept()?;
@@ -229,6 +232,91 @@ mod tests {
         let received_packet = String::from_utf8_lossy(&buf[..n]);
 
         assert_eq!(expected_packet, received_packet);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_send_timescript() -> Result<(), Box<dyn Error>> {
+        // Set up a mock server
+        let listener = TcpListener::bind("127.0.0.1:8202")?;
+        let server_addr = listener.local_addr()?;
+        let mut stream = TcpStream::connect(server_addr)?;
+        let (mut incoming, _) = listener.accept()?;
+
+        // Define some test entries
+        let entries = vec![
+            Entry {
+                number: "M1".to_string(),
+                name: "Vocals".to_string(),
+                start: "1:10:10:04".to_string(),
+            },
+            Entry {
+                number: "M1".to_string(),
+                name: "Drop".to_string(),
+                start: "1:10:10:20".to_string(),
+            },
+        ];
+
+        // Define the expected timescript
+        let expected_timescript =
+            "root\nscript1\ninsert 1:10:10,04\n\nscript1\ninsert 1:10:10,20\n\nroot\n";
+
+        // Send the timescript
+        send_timescript(entries, &mut stream)?;
+
+        // Read the received timescript
+        let mut buf = [0; 1024];
+        let n = incoming.read(&mut buf)?;
+
+        // Convert bytes to string
+        let received_timescript = String::from_utf8_lossy(&buf[..n]);
+
+        assert_eq!(expected_timescript, received_timescript);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_send_timescript_and_entries() -> Result<(), Box<dyn Error>> {
+        // Set up a mock server
+        let listener = TcpListener::bind("127.0.0.1:8203")?;
+        let server_addr = listener.local_addr()?;
+        let mut stream = TcpStream::connect(server_addr)?;
+        let (mut incoming, _) = listener.accept()?;
+
+        // Define some test entries
+        let entries = vec![
+            Entry {
+                number: "M1".to_string(),
+                name: "Vocals".to_string(),
+                start: "1:10:10:04".to_string(),
+            },
+            Entry {
+                number: "M1".to_string(),
+                name: "Drop".to_string(),
+                start: "1:10:10:20".to_string(),
+            },
+        ];
+
+        // Define the expected timescript
+        let expected_timescript_1: &str =
+            "root\nedit\nfilm1\ninsert entry 0\n\nscript1\ninsert 1:10:10,04 entry 0\n\n";
+        let expected_timescript_2: &str =
+            "edit\nfilm1\ninsert entry 1\n\nscript1\ninsert 1:10:10,20 entry 1\n\nroot\n";
+        let expected_timescript = expected_timescript_1.to_owned() + expected_timescript_2;
+
+        // Send the timescript
+        send_timescript_and_entries(entries, 0, &mut stream)?;
+
+        // Read the received timescript
+        let mut buf = [0; 1024];
+        let n = incoming.read(&mut buf)?;
+
+        // Convert bytes to string
+        let received_timescript = String::from_utf8_lossy(&buf[..n]);
+
+        assert_eq!(expected_timescript, received_timescript);
 
         Ok(())
     }
