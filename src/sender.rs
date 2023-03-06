@@ -127,9 +127,29 @@ pub fn send(
     info!("TCP stream opened to address: {}", target);
 
     if create_entries {
-        send_timescript_and_entries(entries, entry_offset, &mut stream)?
+        match send_timescript_and_entries(entries, entry_offset, &mut stream) {
+            Ok(()) => {
+                info!("Successfully sent all entries to timescript and film");
+            }
+            Err(e) => {
+                debug!("Failed to send timescript + entries: {}", e);
+                drop(stream);
+                info!("TCP stream closed to address: {}", target);
+                return Err(e);
+            }
+        };
     } else {
-        send_timescript(entries, &mut stream)?
+        match send_timescript(entries, &mut stream) {
+            Ok(()) => {
+                info!("Successfully sent all entries to timescript");
+            }
+            Err(e) => {
+                debug!("Failed to send timescript: {}", e);
+                drop(stream);
+                info!("TCP stream closed to address: {}", target);
+                return Err(e);
+            }
+        };
     }
 
     // Exit TCP/IP stream
