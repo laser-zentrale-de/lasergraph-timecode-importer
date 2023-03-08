@@ -1,0 +1,75 @@
+{
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/exec",
+      {
+        "verifyConditionsCmd": "./semantic-release-cargo verify-conditions",
+        "prepareCmd": "./semantic-release-cargo prepare ${nextRelease.version}",
+        "publishCmd": "./semantic-release-cargo publish"
+      }
+    ],
+    "@semantic-release/npm",
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "dist/x86_64-pc-windows-gnu/semantic-release-cargo-x86_64-pc-windows-gnu",
+            "label": "x86_64-pc-windows-gnu"
+          },
+          {
+            "path": "dist/x86_64-unknown-linux-musl/semantic-release-cargo-x86_64-unknown-linux-musl",
+            "label": "x86_64-unknown-linux-musl"
+          },
+          {
+            "path": "dist/x86_64-unknown-linux-gnu/semantic-release-cargo-x86_64-unknown-linux-gnu",
+            "label": "x86_64-unknown-linux-gnu"
+          },
+          {
+            "path": "dist/i686-unknown-linux-musl/semantic-release-cargo-i686-unknown-linux-musl",
+            "label": "i686-unknown-linux-musl"
+          },
+          {
+            "path": "dist/i686-unknown-linux-gnu/semantic-release-cargo-i686-unknown-linux-gnu",
+            "label": "i686-unknown-linux-gnu"
+          },
+          {
+            "path": "dist/x86_64-apple-darwin/semantic-release-cargo-x86_64-apple-darwin",
+            "label": "x86_64-apple-darwin"
+          },
+          {
+            "path": "dist/aarch64-unknown-linux-musl/semantic-release-cargo-aarch64-unknown-linux-musl",
+            "label": "aarch64-unknown-linux-musl"
+          },
+          {
+            "path": "dist/aarch64-unknown-linux-gnu/semantic-release-cargo-aarch64-unknown-linux-gnu",
+            "label": "aarch64-unknown-linux-gnu"
+          },
+          {
+            "path": "dist/aarch64-apple-darwin/semantic-release-cargo-aarch64-apple-darwin",
+            "label": "aarch64-apple-darwin"
+          },
+          {
+            "path": "dist/SHA256SUMS.txt",
+            "label": "SHA256SUMS.txt"
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "Cargo.toml",
+          "Cargo.lock",
+          "package.json",
+          "package-lock.json"
+        ]
+      }
+    ]
+  ]
+}
