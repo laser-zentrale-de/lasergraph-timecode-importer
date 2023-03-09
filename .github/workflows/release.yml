@@ -8,7 +8,6 @@ on:
       - completed
 
 jobs:
-
   get-next-version:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: semantic-release-action/next-release-version/.github/workflows/next-release-version.yml@v4
@@ -99,14 +98,14 @@ jobs:
         run: echo "CARGO=cross" >> "$GITHUB_ENV"
 
       - name: Compile release binary
-        run: ${{ env.CARGO }} build --bin semantic-release-cargo --release --target ${{ matrix.build.target }} --verbose
+        run: ${{ env.CARGO }} build --bin lasergraph-dsp-timecode-importer --release --target ${{ matrix.build.target }} --verbose
 
       - name: Create release archive
         run: |
           mkdir dist
-          cp target/${{ matrix.build.target }}/release/semantic-release-cargo dist/semantic-release-cargo-${{ matrix.build.target }}
+          cp target/${{ matrix.build.target }}/release/lasergraph-dsp-timecode-importer dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}
       - name: Create binary checksum
-        run: shasum --algorithm 256 --binary semantic-release-cargo-${{ matrix.build.target }} | tee semantic-release-cargo-${{ matrix.build.target }}-SHA256SUM.txt
+        run: shasum --algorithm 256 --binary lasergraph-dsp-timecode-importer-${{ matrix.build.target }} | tee lasergraph-dsp-timecode-importer-${{ matrix.build.target }}-SHA256SUM.txt
         working-directory: ./dist
 
       - name: Upload release artifacts
@@ -114,15 +113,15 @@ jobs:
         with:
           name: ${{ matrix.build.target }}
           path: |
-            dist/semantic-release-cargo-${{ matrix.build.target }}
-            dist/semantic-release-cargo-${{ matrix.build.target }}-SHA256SUM.txt
+            dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}
+            dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}-SHA256SUM.txt
           if-no-files-found: error
           retention-days: 1
 
   release:
     runs-on: ubuntu-latest
     name: Release
-    if:  ${{ github.event.workflow_run.conclusion == 'success' && needs.get-next-version.outputs.new-release-published == 'true' }}
+    if:  ${{ needs.get-next-version.outputs.new-release-published == 'true' }}
     needs:
       - build-cli
       - get-next-version
@@ -184,6 +183,7 @@ jobs:
           mv artifacts/bindings-aarch64-apple-darwin/semantic-release-cargo.darwin-arm64.node napi/
           mv artifacts/bindings-x86_64-apple-darwin/semantic-release-cargo.darwin-x64.node napi/
           mv artifacts/bindings-x86_64-unknown-linux-gnu/semantic-release-cargo.linux-x64-gnu.node napi/
+
       - name: ls napi
         run: ls -R ./napi
 
@@ -199,13 +199,15 @@ jobs:
           mv artifacts/x86_64-unknown-linux-gnu dist/
           mv artifacts/x86_64-unknown-linux-musl dist/
           mv artifacts/x86_64-pc-windows-gnu dist/
-      - name: Combine checksums
-        run: cat dist/**/semantic-release-cargo-*-SHA256SUM.txt | tee dist/SHA256SUMS.txt
 
-      - name: Prepare semantic-release-cargo for local use
+      - name: Combine checksums
+        run: cat dist/**/lasergraph-dsp-timecode-importer-*-SHA256SUM.txt | tee dist/SHA256SUMS.txt
+
+      - name: Prepare lasergraph-dsp-timecode-importer for local use
         run: |
-          cp dist/x86_64-unknown-linux-musl/semantic-release-cargo-x86_64-unknown-linux-musl ./semantic-release-cargo
-          chmod +x ./semantic-release-cargo
+          cp dist/x86_64-unknown-linux-musl/lasergraph-dsp-timecode-importer-x86_64-unknown-linux-musl ./lasergraph-dsp-timecode-importer
+          chmod +x ./lasergraph-dsp-timecode-importer
+
       - name: Invoke semantic-release
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
