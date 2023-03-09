@@ -27,30 +27,39 @@ jobs:
           # alphabatized by target
           - os: macOS-latest
             target: aarch64-apple-darwin
+            extension: ''
             cross: true
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
+            extension: ''
             cross: true
           - os: ubuntu-latest
             target: aarch64-unknown-linux-musl
+            extension: ''
             cross: true
           - os: ubuntu-latest
             target: i686-unknown-linux-gnu
+            extension: ''
             cross: true
           - os: ubuntu-latest
             target: i686-unknown-linux-musl
+            extension: ''
             cross: true
           - os: macOS-latest
             target: x86_64-apple-darwin
+            extension: ''
             cross: false
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            extension: ''
             cross: false
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
+            extension: ''
             cross: false
           - os: ubuntu-latest
             target: x86_64-pc-windows-gnu
+            extension: .exe
             cross: true
 
     steps:
@@ -103,9 +112,10 @@ jobs:
       - name: Create release archive
         run: |
           mkdir dist
-          cp target/${{ matrix.build.target }}/release/lasergraph-dsp-timecode-importer dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}
+          cp target/${{ matrix.build.target }}/release/lasergraph-dsp-timecode-importer${{ matrix.build.extension }} dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}${{ matrix.build.extension }}
+
       - name: Create binary checksum
-        run: shasum --algorithm 256 --binary lasergraph-dsp-timecode-importer-${{ matrix.build.target }} | tee lasergraph-dsp-timecode-importer-${{ matrix.build.target }}-SHA256SUM.txt
+        run: shasum --algorithm 256 --binary lasergraph-dsp-timecode-importer-${{ matrix.build.target }}${{ matrix.build.extension }} | tee lasergraph-dsp-timecode-importer-${{ matrix.build.target }}-SHA256SUM.txt
         working-directory: ./dist
 
       - name: Upload release artifacts
@@ -113,7 +123,7 @@ jobs:
         with:
           name: ${{ matrix.build.target }}
           path: |
-            dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}
+            dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}${{ matrix.build.extension }}
             dist/lasergraph-dsp-timecode-importer-${{ matrix.build.target }}-SHA256SUM.txt
           if-no-files-found: error
           retention-days: 1
