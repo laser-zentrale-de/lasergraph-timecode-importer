@@ -2,13 +2,13 @@ name: build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     # paths:
     #   - "**.rs"
     #   - "Cargo.toml"
     #   - "Cargo.lock"
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 env:
   CARGO_TERM_COLOR: always

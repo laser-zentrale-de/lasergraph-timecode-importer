@@ -3,9 +3,9 @@ name: release
 on:
   workflow_run:
     workflows: ["build"]
-    branches: [main]
+    branches: [master]
     types:
-      - completed
+      - success
 
 jobs:
 
