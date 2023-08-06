@@ -163,10 +163,11 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-          check-latest: true
-          cache: npm
+        # with:
+        #   node-version: lts/*
+        #   check-latest: true
+        #   cache: npm
+        #   cache-dependency-path: ./node_modules/package-lock.json
 
       - name: Cache npm dependencies
         uses: actions/cache@v3
