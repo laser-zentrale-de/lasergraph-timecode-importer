@@ -1,9 +1,9 @@
 [package]
-name = "lasergraph-dsp-timecode-importer"
-version = "0.1.1"
+name = "lasergraph-timecode-importer"
+version = "1.0.0"
 edition = "2021"
 authors = ["Dustin Strobel <d-strobel>"]
-repository = "https://github.com/d-strobel/lasergraph-dsp-timecode-importer"
+repository = "https://github.com/laser-zentrale-de/lasergraph-timecode-importer"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

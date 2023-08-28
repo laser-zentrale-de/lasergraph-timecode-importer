@@ -2,7 +2,7 @@
 [![dependency status](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer/status.svg)](https://deps.rs/repo/github/d-strobel/lasergraph-dsp-timecode-importer)
 [![AGPL-3.0 Licensed](https://img.shields.io/github/license/d-strobel/lasergraph-dsp-timecode-importer)](https://github.com/d-strobel/lasergraph-dsp-timecode-importer/blob/main/LICENSE)
 
-# Lasergraph DSP timecode importer
+# Lasergraph timecode importer
 Timecode importer for the Laseranimation Sollinger Lasergraph DSP.
 
 ## Description
@@ -18,7 +18,7 @@ This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Las
 
 ## Usage
 ```
-Usage: lasergraph-dsp-timecode-importer [OPTIONS] --address <IP-ADDRESS> --csv <FILE>
+Usage: lasergraph-timecode-importer [OPTIONS] --address <IP-ADDRESS> --csv <FILE>
 
 Options:
   -a, --address <IP-ADDRESS>  IP-Address of the Lasergraph DSP
