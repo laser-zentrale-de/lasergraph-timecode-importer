@@ -1,6 +1,6 @@
 [package]
 name = "lasergraph-dsp-timecode-importer"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Dustin Strobel <d-strobel>"]
 repository = "https://github.com/d-strobel/lasergraph-dsp-timecode-importer"
