@@ -33,6 +33,6 @@ Options:
 ## Why?
 Sometimes it's hard to find the correct timestamp for specific (out of beat) sequences in the Lasergraph DSP Timescript.<br>
 There are thrid party tools like Reaper, where you can set specific markers to the the timeline and export them afterwards to a csv-file.<br>
-For light shows with the MaLighting GrandMa2, it is common practice to use the exported csv and import it to the consol.<br>
+For light shows with the MaLighting GrandMa2, it is common practice to use the exported csv and import it to the console.<br>
 <br>
 I want to adapt this workflow to the Lasergraph DSP.
