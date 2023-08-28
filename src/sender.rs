@@ -101,14 +101,17 @@ fn send_timescript(entries: Vec<Entry>, stream: &mut TcpStream) -> Result<(), Bo
     // Swtich to DSP main window
     send_tcp_packet(stream, "root")?;
 
+    // Edit the timescript
+    send_tcp_packet(stream, "edit")?;
+    send_tcp_packet(stream, "script1")?;
+
     // Loop through entries
     for entry in entries {
         // Convert timestamp
         let timestamp: String = format_timestamp(&entry.start)?;
-        let timescript_insert: String = format!("insert {}", timestamp);
+        let timescript_insert: String = format!("insert {} entry", timestamp);
 
         // Add timestamp to timescript
-        send_tcp_packet(stream, "script1")?;
         send_tcp_packet(stream, &timescript_insert)?;
         send_tcp_packet(stream, "")?;
     }
@@ -260,7 +263,7 @@ mod tests {
 
         // Define the expected timescript
         let expected_timescript =
-            "root\nscript1\ninsert 1:10:10,04\n\nscript1\ninsert 1:10:10,20\n\nroot\n";
+            "root\nedit\nscript1\ninsert 1:10:10,04 entry\n\ninsert 1:10:10,20 entry\n\nroot\n";
 
         // Send the timescript
         send_timescript(entries, &mut stream)?;
