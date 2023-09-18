@@ -39,6 +39,12 @@ I want to adapt this workflow to the Lasergraph DSP.
 
 ## Releases
 
+### Semantic Versioning
+All releases must be versioned with the concept of semantic versioning:<br>
+v[Major].[Minor].[Patch]
+
+For more information, see [https://semver.org](https://semver.org).
+
 ### Publish a new release
 There are a few steps to publish a release:
 1. Merge all changes to the master branch.
