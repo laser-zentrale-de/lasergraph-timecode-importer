@@ -29,7 +29,7 @@ Options:
   -h, --help                  Print help
   -V, --version               Print version
 ```
-For a more detailed explanation, see the repository wiki.
+For a more detailed explanation, see the repository [wiki](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/wiki).
 
 ## Why
 Sometimes it's hard to find the correct timestamp for specific (out of beat) sequences in the Lasergraph DSP Timescript.<br>
