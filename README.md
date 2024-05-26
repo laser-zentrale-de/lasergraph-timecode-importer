@@ -38,11 +38,3 @@ There are thrid party tools like Reaper, where you can set specific markers to t
 For light shows with the MaLighting GrandMa2, it is common practice to use the exported csv and import it to the console.<br>
 <br>
 I want to adapt this workflow to the Lasergraph DSP.
-
-## Releases
-
-### Semantic Versioning
-All releases must be versioned with the concept of semantic versioning:<br>
-v[Major].[Minor].[Patch]
-
-For more information, see [https://semver.org](https://semver.org).
