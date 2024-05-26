@@ -46,11 +46,3 @@ All releases must be versioned with the concept of semantic versioning:<br>
 v[Major].[Minor].[Patch]
 
 For more information, see [https://semver.org](https://semver.org).
-
-### Publish a new release
-There are a few steps to publish a release:
-1. Merge all changes to the master branch.
-2. The **last** change must include the new version number in the [Cargo.toml](Cargo.toml) file.
-3. Create the corresponding tag on github.
-4. The pipeline runs automatically when a new tag is pushed to the repository.<br>
-The pipeline builds the binaries and creates the release.
