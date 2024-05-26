@@ -1,14 +1,14 @@
+---
 name: build
 
 on:
   push:
-    branches: [ "master" ]
-    # paths:
-    #   - "**.rs"
-    #   - "Cargo.toml"
-    #   - "Cargo.lock"
+    paths:
+      - "**.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
   pull_request:
-    branches: [ "master" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
