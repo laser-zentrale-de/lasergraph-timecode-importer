@@ -6,6 +6,9 @@ use std::error::Error;
 use std::io::prelude::*;
 use std::net::TcpStream;
 
+// Define the TCP timeout in milliseconds
+const TCP_TIMEOUT: u64 = 100;
+
 fn replace_timestamp_last_colon_to_comma(input: &str) -> Result<String, Box<dyn Error>> {
     let split = input.split(':').collect::<Vec<&str>>();
 
@@ -89,6 +92,9 @@ fn send_timescript_and_entries(
         send_tcp_packet(stream, "")?;
 
         i += 1;
+
+        // Sleep for to prevent the DSP from crashing
+        std::thread::sleep(std::time::Duration::from_millis(TCP_TIMEOUT));
     }
 
     // Swtich to DSP main window
@@ -114,6 +120,9 @@ fn send_timescript(entries: Vec<Entry>, stream: &mut TcpStream) -> Result<(), Bo
         // Add timestamp to timescript
         send_tcp_packet(stream, &timescript_insert)?;
         send_tcp_packet(stream, "")?;
+
+        // Sleep for to prevent the DSP from crashing
+        std::thread::sleep(std::time::Duration::from_millis(TCP_TIMEOUT));
     }
 
     // Swtich to DSP main window
@@ -128,7 +137,6 @@ pub fn send(
     create_entries: bool,
     entry_offset: i32,
 ) -> Result<(), Box<dyn Error>> {
-    // Open TCP/IP stream
     let mut stream = TcpStream::connect(target)?;
     info!("TCP stream opened to address: {}", target);
 
