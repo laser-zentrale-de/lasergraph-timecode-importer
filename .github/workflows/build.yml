@@ -13,6 +13,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUST_TOOLCHAIN: 1.74.0
+  RUSTUP_TOOLCHAIN: stable
 
 jobs:
   build:
@@ -33,9 +34,9 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: $RUST_TOOLCHAIN
+          toolchain: $RUSTUP_TOOLCHAIN
           override: true
-          components: rustfmt, clippy
+          components: cargo, rustfmt, clippy
 
       - name: Check formatting
         uses: actions-rs/cargo@v1
@@ -59,4 +60,3 @@ jobs:
         with:
           command: test
           args: -- --verbose
-
