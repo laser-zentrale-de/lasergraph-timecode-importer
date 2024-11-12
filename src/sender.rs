@@ -258,13 +258,9 @@ mod tests {
         // Define some test entries
         let entries = vec![
             Entry {
-                number: "M1".to_string(),
-                name: "Vocals".to_string(),
                 start: "1:10:10:04".to_string(),
             },
             Entry {
-                number: "M1".to_string(),
-                name: "Drop".to_string(),
                 start: "1:10:10:20".to_string(),
             },
         ];
@@ -299,13 +295,9 @@ mod tests {
         // Define some test entries
         let entries = vec![
             Entry {
-                number: "M1".to_string(),
-                name: "Vocals".to_string(),
                 start: "1:10:10:04".to_string(),
             },
             Entry {
-                number: "M1".to_string(),
-                name: "Drop".to_string(),
                 start: "1:10:10:20".to_string(),
             },
         ];
@@ -343,13 +335,9 @@ mod tests {
         // Define some test entries
         let entries = vec![
             Entry {
-                number: "M1".to_string(),
-                name: "Vocals".to_string(),
                 start: "1:10:10:04".to_string(),
             },
             Entry {
-                number: "M1".to_string(),
-                name: "Drop".to_string(),
                 start: "1:10:10:20".to_string(),
             },
         ];

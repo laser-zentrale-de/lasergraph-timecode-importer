@@ -5,10 +5,10 @@ use std::fs::File;
 
 #[derive(Deserialize, Debug)]
 pub struct Entry {
-    #[serde(rename = "#")]
-    pub number: String,
-    #[serde(rename = "Name")]
-    pub name: String,
+    //#[serde(rename = "#")]
+    //pub number: String,
+    //#[serde(rename = "Name")]
+    //pub name: String,
     #[serde(rename = "Start")]
     pub start: String,
 }
@@ -57,14 +57,8 @@ mod tests {
         assert!(result.is_ok());
         let entries = result.unwrap();
         assert_eq!(entries.len(), 3);
-        assert_eq!(entries[0].number, "M1");
-        assert_eq!(entries[0].name, "Vocals");
         assert_eq!(entries[0].start, "00:00:01:23");
-        assert_eq!(entries[1].number, "M2");
-        assert_eq!(entries[1].name, "First Drop");
         assert_eq!(entries[1].start, "1:03:55:02");
-        assert_eq!(entries[2].number, "M3");
-        assert_eq!(entries[2].name, "Second Drop");
         assert_eq!(entries[2].start, "10:43:20:01");
     }
 }
