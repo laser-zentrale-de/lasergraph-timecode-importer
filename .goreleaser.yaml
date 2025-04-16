@@ -1,0 +1,36 @@
+version: 2
+
+before:
+  hooks:
+    - rustup toolchain install
+    - cargo install --locked cargo-zigbuild
+    - cargo fetch
+
+builds:
+  - builder: rust
+    flags:
+      - --release
+    targets:
+      - x86_64-unknown-linux-gnu
+      - x86_64-apple-darwin
+      - x86_64-pc-windows-gnu
+      - aarch64-unknown-linux-gnu
+      - aarch64-apple-darwin
+
+archives:
+  - formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+changelog:
+  disable: true
+
+release:
+  mode: keep-existing

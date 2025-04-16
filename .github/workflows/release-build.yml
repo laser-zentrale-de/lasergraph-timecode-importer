@@ -1,30 +1,31 @@
 ---
+name: goreleaser
+
 on:
   release:
     types: [created]
 
-name: release-build
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  id-token: write
 
 jobs:
-  release-build:
-    name: release ${{ matrix.target }}
+  goreleaser:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: x86_64-pc-windows-gnu
-            archive: zip
-          - target: x86_64-unknown-linux-musl
-            archive: tar.gz tar.xz
-          - target: x86_64-apple-darwin
-            archive: zip
     steps:
-      - uses: actions/checkout@master
-      - name: Compile and release
-        uses: rust-build/rust-build.action@v1.4.5
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # we'll need this for both 'zig build' and 'cargo zigbuild'
+      - uses: mlugg/setup-zig@v1
+
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          RUSTTARGET: ${{ matrix.target }}
-          ARCHIVE_TYPES: ${{ matrix.archive }}
