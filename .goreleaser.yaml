@@ -2,7 +2,7 @@ version: 2
 
 before:
   hooks:
-    - rustup default stable
+    - rustup toolchain install
     - cargo install --locked cargo-zigbuild
     - cargo fetch
 
