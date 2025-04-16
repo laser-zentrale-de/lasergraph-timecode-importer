@@ -18,7 +18,8 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
-        rust = pkgs.rust-bin.stable."1.85.1".default;
+        rustToolchain = builtins.fromTOML (builtins.readFile ./rust-toolchain.toml);
+        rust = pkgs.rust-bin.stable.${rustToolchain.toolchain.channel}.default;
         cargo = builtins.fromTOML (builtins.readFile ./Cargo.toml);
       in {
         devShells.default = with pkgs;
