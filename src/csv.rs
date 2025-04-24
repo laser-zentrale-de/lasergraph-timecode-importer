@@ -35,7 +35,6 @@ pub fn get_csv_entries(filepath: std::path::PathBuf) -> Result<Vec<Entry>, Box<d
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile;
 
     #[test]
     fn test_get_csv_entries() {
