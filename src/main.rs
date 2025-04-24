@@ -12,7 +12,7 @@ fn main() {
     // Initialize the logger
     env_logger::init();
 
-    info!("lasergraph-dsp-timecode-importer started");
+    info!("lasergraph-timecode-importer started");
 
     // Parse arguments from CLI
     let args = cli::Args::parse();
@@ -20,6 +20,7 @@ fn main() {
     match args.command {
         // Handle shell completions
         Some(cli::Commands::Completions { shell }) => {
+            info!("Subcommand: completions");
             let mut cmd = cli::Args::command();
             let name = cmd.get_name().to_string();
             clap_complete::generate(shell, &mut cmd, name, &mut std::io::stdout());
@@ -33,6 +34,7 @@ fn main() {
             create_entry,
             start_entry,
         }) => {
+            info!("Subcommand: import");
             let target: String = format!("{}:{}", address, port);
             let filepath: PathBuf = csv;
             let entry_offset: i32 = start_entry;
@@ -58,6 +60,7 @@ fn main() {
 
         // Show help if no subcommand is provided
         None => {
+            info!("Subcommand not provided -> Fallback to help");
             cli::Args::command().print_help().unwrap();
             std::process::exit(0);
         }
