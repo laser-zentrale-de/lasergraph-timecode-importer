@@ -22,8 +22,14 @@ This tool imports timestamps from a csv-file to the LaserAnimation Sollinger Las
 
 ## Usage
 
+> For a detailed explanation, see the repository [wiki](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/wiki).
+
+### Importer
+
+To run the importer, use the subcommand 'import'.
+
 ```shell
-Usage: lasergraph-timecode-importer [OPTIONS] --address <IP-ADDRESS> --csv <FILE>
+Usage: lasergraph-timecode-importer import [OPTIONS] --address <IP-ADDRESS> --csv <FILE>
 
 Options:
   -a, --address <IP-ADDRESS>  IP-Address of the Lasergraph DSP
@@ -32,10 +38,27 @@ Options:
   -e, --create-entry          Defines if entries should be created
   -s, --start-entry <ENTRY>   Defines the number of the first Entry [default: 0]
   -h, --help                  Print help
-  -V, --version               Print version
 ```
 
-For a more detailed explanation, see the repository [wiki](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/wiki).
+### Shell completions
+
+To generate shell completions, use the 'completions' subcommand with the desired shell as an argument.
+
+```shell
+Usage: lasergraph-timecode-importer completions <SHELL>
+
+Arguments:
+  <SHELL>  [possible values: bash, elvish, fish, powershell, zsh]
+
+Options:
+  -h, --help  Print help
+```
+
+Example with fish shell:
+
+```bash
+lasergraph-timecode-importer completions fish > ~/.config/fish/completions/lasergraph-timecode-importer.fish
+```
 
 ## Why
 
