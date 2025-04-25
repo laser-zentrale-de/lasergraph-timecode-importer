@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/compare/v1.1.0...v1.1.1) (2025-04-25)
+
+
+### Bug Fixes
+
+* goreleaser rust build for windows ([7c7779c](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/commit/7c7779cc1c65c358b7d36ee861ec6ac5e3b11121))
+* goreleaser rust build for windows ([0adc300](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/commit/0adc30006df7a1da1881485cb262ae2f63e0ffa2))
+
 ## [1.1.0](https://github.com/laser-zentrale-de/lasergraph-timecode-importer/compare/v1.0.1...v1.1.0) (2025-04-24)
 
 
