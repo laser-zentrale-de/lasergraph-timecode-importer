@@ -11,7 +11,7 @@ csv = "1.4.0"
 clap = { version = "4.5.53", features = ["derive"] }
 clap_complete = "4.5.61"
 env_logger = "0.11.8"
-log = "0.4.28"
+log = "0.4.29"
 regex = "1.12.2"
 thiserror = "2.0.17"
 tempfile = "3.23.0"
